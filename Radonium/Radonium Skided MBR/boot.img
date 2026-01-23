@@ -1,0 +1,18 @@
+[BITS 16]
+[ORG 0x7C00]
+
+start:
+    mov ax, 0x0013      ; Inicia modo VGA 320x200
+    int 0x10
+    mov ax, 0xA000      ; Aponta para a memória de vídeo
+    mov es, ax
+    xor di, di
+
+loop_cores:
+    mov [es:di], di     ; Usa a posição do pixel como a cor (cria o gradiente)
+    inc di
+    jnz loop_cores      ; Repete até encher os 64k de memória
+    jmp $               ; Trava para não reiniciar
+
+times 510-($-$$) db 0
+dw 0xAA55
